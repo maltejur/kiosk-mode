@@ -134,6 +134,7 @@ class KioskMode implements KioskModeRunner {
   private ignoreEntity: boolean;
   private ignoreMobile: boolean;
   private ignoreDisableKm: boolean;
+  private transparentBackground: boolean;
 
   public run(lovelace = this.main.querySelector<Lovelace>(ELEMENT.HA_PANEL_LOVELACE)) {
     if (!lovelace) {
@@ -175,6 +176,7 @@ class KioskMode implements KioskModeRunner {
     this.ignoreEntity        = false;
     this.ignoreMobile        = false;
     this.ignoreDisableKm     = false;
+    this.transparentBackground = false;
 
     this.huiRoot = await getPromisableElement(
       (): ShadowRoot => this.lovelace?.shadowRoot?.querySelector(ELEMENT.HUI_ROOT)?.shadowRoot,
@@ -241,7 +243,8 @@ class KioskMode implements KioskModeRunner {
         OPTION.HIDE_UNUSED_ENTITIES,
         OPTION.HIDE_EDIT_DASHBOARD,
         OPTION.BLOCK_OVERFLOW,
-        OPTION.BLOCK_MOUSE
+        OPTION.BLOCK_MOUSE,
+        OPTION.TRANSPARENT_BACKGROUND
       ])
     );
     if (queryStringsSet) {
@@ -258,6 +261,7 @@ class KioskMode implements KioskModeRunner {
       this.hideEditDashboard   = cached(CACHE.EDIT_DASHBOARD)   || queryString([OPTION.KIOSK, OPTION.HIDE_EDIT_DASHBOARD]);
       this.blockOverflow       = cached(CACHE.OVERFLOW_MOUSE)   || queryString([OPTION.BLOCK_OVERFLOW]);
       this.blockMouse          = cached(CACHE.MOUSE)            || queryString([OPTION.BLOCK_MOUSE]);
+      this.transparentBackground = cached(CACHE.TRANSPARENT_BACKGROUND) || queryString([OPTION.TRANSPARENT_BACKGROUND])
     }
 
     // Use config values only if config strings and cache aren't used.
@@ -300,6 +304,7 @@ class KioskMode implements KioskModeRunner {
     this.blockMouse = queryStringsSet
       ? this.blockMouse
       : config.block_mouse;
+    this.transparentBackground = queryStringsSet && this.transparentBackground;
 
     // Admin non-admin config
     const adminConfig = this.user.is_admin
@@ -443,9 +448,16 @@ class KioskMode implements KioskModeRunner {
       removeStyle(this.appToolbar);
     }
 
-    if (this.blockMouse) {
-      addStyle(STYLES.MOUSE, document.body);
-      if (queryString(OPTION.CACHE)) setCache(CACHE.MOUSE, TRUE);
+    if (this.blockMouse || this.transparentBackground) {
+      const styles = [
+        this.blockMouse ? STYLES.MOUSE : '',
+        this.transparentBackground ? STYLES.TRANSPARENT_BACKGROUND : '',
+      ]
+      addStyle(styles.join(''), document.body);
+      if (queryString(OPTION.CACHE)) {
+          if (this.blockMouse) setCache(CACHE.MOUSE, TRUE);
+          if (this.transparentBackground) setCache(CACHE.TRANSPARENT_BACKGROUND, TRUE);
+      }
     } else {
       removeStyle(document.body);
     }

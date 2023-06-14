@@ -16,7 +16,8 @@ export enum CACHE {
     RELOAD_RESOURCES = 'kmReloadResources',
     EDIT_DASHBOARD = 'kmEditDashboard',
     OVERFLOW_MOUSE = 'kmOverflowMouse',
-    MOUSE = 'kmMouse'
+    MOUSE = 'kmMouse',
+    TRANSPARENT_BACKGROUND = 'kmTransparentBackground'
 }
 
 export enum OPTION {
@@ -36,7 +37,8 @@ export enum OPTION {
     HIDE_RELOAD_RESOURCES = 'hide_reload_resources',
     HIDE_EDIT_DASHBOARD = 'hide_edit_dashboard',
     BLOCK_OVERFLOW = 'block_overflow',
-    BLOCK_MOUSE = 'block_mouse'
+    BLOCK_MOUSE = 'block_mouse',
+    TRANSPARENT_BACKGROUND = 'transparent_background'
 }
 
 const UI_PREFIX = 'ui';

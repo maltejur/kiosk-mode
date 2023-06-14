@@ -78,5 +78,11 @@ export const STYLES = {
     ),
     EDIT_DASHBOARD: getDisplayNoneRulesString(
         `${TOOLBAR} > ${ACTION_ITEMS} > ${BUTTON_MENU} > ${OVERFLOW_BUTTON_MENU}[data-selector="${MENU.EDIT_DASHBOARD}"]`
-    )
+    ),
+    TRANSPARENT_BACKGROUND: getCSSRulesString({
+        "html": {
+            "background-color": "transparent !important",
+            "--primary-background-color": "transparent !important",
+        }
+    })
 };
